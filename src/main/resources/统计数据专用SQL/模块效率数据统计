@@ -1,0 +1,68 @@
+SELECT
+m.makingNo '制单号',
+  m.workNo '工单号',
+  m.modno '模块号',
+  m.prepareNum '预排数量',
+  m.outputNum '产出数量',
+  concat(ROUND(
+    (
+      n.work_effective_hour / (1000 * 60 * 60)
+    ),
+    2
+  ),'小时') 生产有效工时,
+  concat(ROUND(n.abnormal_hour/(1000*60*60),2),'小时')异常工时,
+  concat(ROUND(n.rest_effctive_hour/(1000*60*60),2),'小时')有效休息工时,
+  concat(ROUND(n.rest_hour/(1000*60*60),2),'小时')rest_hour,
+  concat(round((n.work_effective_hour/(n.work_effective_hour+n.abnormal_hour+n.rest_hour)*100),0),'%')'毛效率(y1)',
+  CONCAT(ROUND((n.work_effective_hour/(n.work_effective_hour+n.abnormal_hour)*100),0),'%')'经效率(y2)'
+FROM
+  (SELECT
+    a.`makingNo`,
+    b.workNo,
+    b.modNo,
+    b.prepareNum,
+    c.outputNum
+  FROM
+    mes_order_work a
+    INNER JOIN
+      (SELECT
+        workNo,
+        modNo,
+        SUM(prepareNum) prepareNum
+      FROM
+        mes_module_preparenum
+      WHERE createTime >= '2019-04-19 08:00:00'
+        AND createTime < '2019-04-20 08:00:00'
+      GROUP BY workNo,
+        modNo
+      ORDER BY workNo,
+        modNo) b
+      ON a.workNo = b.workNo
+    LEFT JOIN
+      (SELECT
+        workNo,
+        modNo,
+        SUM(outputNum) 'outputNum'
+      FROM
+        mes_print_tag
+      WHERE dateNo = '2019-04-19'
+      GROUP BY workNo,
+        modNo
+      ORDER BY workNo,
+        modNo) c
+      ON b.workNo = c.workNo
+      AND b.modNo = c.modNo) m
+  LEFT JOIN
+    (SELECT
+      workNo,
+      modNo,
+      SUM(work_effective_hour) work_effective_hour,
+      SUM(abnormal_hour) abnormal_hour,
+      SUM(rest_effctive_hour) rest_effctive_hour,
+      SUM(rest_hour) rest_hour
+    FROM
+      report_worktime
+    GROUP BY workNo,
+      modNo) n
+    ON m.workNo = n.workNo
+    AND m.modNo = n.modNo

@@ -1,0 +1,58 @@
+SELECT
+  SUM(m.prepareNum)prepareNum,
+  SUM(m.outputNum)outputNum,
+  ROUND((SUM(n.work_effective_hour))/(1000*60*60),2)work_effective_hour,
+  ROUND(SUM(n.abnormal_hour)/(1000*60*60))abnormal_hour,
+  ROUND(SUM(n.rest_effctive_hour)/(1000*60*60),2)rest_effctive_hour,
+  ROUND(SUM(n.rest_hour)/(1000*60*60),2)rest_hour
+FROM
+  (SELECT
+    a.`makingNo`,
+    b.workNo,
+    b.modNo,
+    b.prepareNum,
+    c.outputNum
+  FROM
+    mes_order_work a
+    INNER JOIN
+      (SELECT
+        workNo,
+        modNo,
+        SUM(prepareNum) prepareNum
+      FROM
+        mes_module_preparenum
+      WHERE createTime >= '2019-04-19 08:00:00'
+        AND createTime < '2019-04-20 08:00:00'
+      GROUP BY workNo,
+        modNo
+      ORDER BY workNo,
+        modNo) b
+      ON a.workNo = b.workNo
+    LEFT JOIN
+      (SELECT
+        workNo,
+        modNo,
+        SUM(outputNum) 'outputNum'
+      FROM
+        mes_print_tag
+      WHERE dateNo = '2019-04-19'
+      GROUP BY workNo,
+        modNo
+      ORDER BY workNo,
+        modNo) c
+      ON b.workNo = c.workNo
+      AND b.modNo = c.modNo) m
+  LEFT JOIN
+    (SELECT
+      workNo,
+      modNo,
+      SUM(work_effective_hour) work_effective_hour,
+      SUM(abnormal_hour) abnormal_hour,
+      SUM(rest_effctive_hour) rest_effctive_hour,
+      SUM(rest_hour) rest_hour
+    FROM
+      report_worktime
+    GROUP BY workNo,
+      modNo) n
+    ON m.workNo = n.workNo
+    AND m.modNo = n.modNo
