@@ -17,6 +17,16 @@ public class AnnotationUtil {
         return false;
     }
 
+    public static boolean contain(Annotation[] annotations, Class<Annotation> var2) {
+        for (Annotation a : annotations) {
+            Annotation annotation = a.annotationType().getAnnotation(var2);
+            if (annotation.annotationType() == var2) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public static boolean similar(Annotation var1, Annotation var2) {
         return var1.annotationType() == var2.annotationType();
     }
