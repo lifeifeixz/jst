@@ -1,10 +1,10 @@
 SELECT
-  SUM(m.prepareNum)prepareNum,
-  SUM(m.outputNum)outputNum,
-  ROUND((SUM(n.work_effective_hour))/(1000*60*60),2)work_effective_hour,
-  ROUND(SUM(n.abnormal_hour)/(1000*60*60))abnormal_hour,
-  ROUND(SUM(n.rest_effctive_hour)/(1000*60*60),2)rest_effctive_hour,
-  ROUND(SUM(n.rest_hour)/(1000*60*60),2)rest_hour
+  SUM(m.prepareNum)'排成数量',
+  SUM(m.outputNum)'产出数量',
+  ROUND((SUM(n.work_effective_hour))/(1000*60*60),2)'生产有效工时',
+  ROUND(SUM(n.abnormal_hour)/(1000*60*60))'异常工时',
+  ROUND(SUM(n.rest_effctive_hour)/(1000*60*60),2)'有效休息工时',
+  ROUND(SUM(n.rest_hour)/(1000*60*60),2)'休息工时'
 FROM
   (SELECT
     a.`makingNo`,
@@ -21,8 +21,8 @@ FROM
         SUM(prepareNum) prepareNum
       FROM
         mes_module_preparenum
-      WHERE createTime >= '2019-04-19 08:00:00'
-        AND createTime < '2019-04-20 08:00:00'
+      WHERE createTime >= '2019-04-20 08:00:00'
+        AND createTime < '2019-04-21 08:00:00'
       GROUP BY workNo,
         modNo
       ORDER BY workNo,
@@ -35,7 +35,7 @@ FROM
         SUM(outputNum) 'outputNum'
       FROM
         mes_print_tag
-      WHERE dateNo = '2019-04-19'
+      WHERE dateNo = '2019-04-20'
       GROUP BY workNo,
         modNo
       ORDER BY workNo,

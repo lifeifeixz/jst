@@ -12,7 +12,7 @@ m.makingNo '制单号',
   ),'小时') 生产有效工时,
   concat(ROUND(n.abnormal_hour/(1000*60*60),2),'小时')异常工时,
   concat(ROUND(n.rest_effctive_hour/(1000*60*60),2),'小时')有效休息工时,
-  concat(ROUND(n.rest_hour/(1000*60*60),2),'小时')rest_hour,
+  concat(ROUND(n.rest_hour/(1000*60*60),2),'小时')休息时间,
   concat(round((n.work_effective_hour/(n.work_effective_hour+n.abnormal_hour+n.rest_hour)*100),0),'%')'毛效率(y1)',
   CONCAT(ROUND((n.work_effective_hour/(n.work_effective_hour+n.abnormal_hour)*100),0),'%')'经效率(y2)'
 FROM
@@ -31,8 +31,8 @@ FROM
         SUM(prepareNum) prepareNum
       FROM
         mes_module_preparenum
-      WHERE createTime >= '2019-04-19 08:00:00'
-        AND createTime < '2019-04-20 08:00:00'
+      WHERE createTime >= '2019-04-20 08:00:00'
+        AND createTime < '2019-04-21 08:00:00'
       GROUP BY workNo,
         modNo
       ORDER BY workNo,
@@ -45,7 +45,7 @@ FROM
         SUM(outputNum) 'outputNum'
       FROM
         mes_print_tag
-      WHERE dateNo = '2019-04-19'
+      WHERE dateNo = '2019-04-20'
       GROUP BY workNo,
         modNo
       ORDER BY workNo,

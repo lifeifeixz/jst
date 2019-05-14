@@ -1,10 +1,10 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.example.jst.dao.MesAbnormalTimeDao">
+<mapper namespace="org.flysli.gadget.dao.MesAbnormalTimeDao">
     
-    <resultMap id="abnormalMapper" type="com.example.jst.bean.dto.UserAbnormalDto">
+    <resultMap id="abnormalMapper" type="org.flysli.gadget.bean.dto.UserAbnormalDto">
         <id column="username" property="userName"/>
         <result column="nickname" property="nickName"/>
-        <collection property="abnormalTimes" ofType="com.example.jst.bean.MesAbnormalTime">
+        <collection property="abnormalTimes" ofType="org.flysli.gadget.bean.MesAbnormalTime">
             <!--<id column="username" property="userName"/>-->
             <result column="abnormalUuid" property="abnormalUuid"/>
             <result property="expstartTime" column="expstartTime"/>
