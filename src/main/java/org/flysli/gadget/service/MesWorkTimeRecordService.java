@@ -1,7 +1,5 @@
 package org.flysli.gadget.service;
 
-
-import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.flysli.gadget.bean.MesWorkTimeRecord;
@@ -19,13 +17,12 @@ public class MesWorkTimeRecordService {
 
     public PageInfo<MesWorkTimeRecord> data() {
         PageHelper.startPage(0, 10);
-        Page<MesWorkTimeRecord> page=(Page<MesWorkTimeRecord>)workTimeRecordDao.workTimeRecordList();
 //        PageInfo<MesWorkTimeRecord> pageInfo = new PageInfo<>();
 //        pageInfo.setTotal(page.getTotal());
 //        pageInfo.setSize(page.getPageSize());
 //        pageInfo.setPages(page.getPages());
 //        pageInfo.setList(page);
-        return new PageInfo<>(page);
+        return new PageInfo<>(workTimeRecordDao.workTimeRecordList());
     }
 
 }
