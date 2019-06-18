@@ -1,15 +1,19 @@
-package org.flysli.gadget.service;
+package com.example.jst.service;
 
-import org.flysli.gadget.bean.MesAbnormalTime;
-import org.flysli.gadget.bean.MesBatchRest;
-import org.flysli.gadget.bean.MesWorkTimeRecord;
-import org.flysli.gadget.bean.ReportWorktime;
-import org.flysli.gadget.bean.dto.RestDate;
-import org.flysli.gadget.dao.MesAbnormalTimeDao;
-import org.flysli.gadget.dao.MesBatchRestDao;
-import org.flysli.gadget.dao.MesWorkTimeRecordDao;
-import org.flysli.gadget.dao.ReportWorkTimeDao;
-import org.flysli.gadget.util.DateUtil;
+import com.example.jst.bean.MesAbnormalTime;
+import com.example.jst.bean.MesBatchRest;
+import com.example.jst.bean.MesWorkTimeRecord;
+import com.example.jst.bean.ReportWorktime;
+import com.example.jst.bean.common.Pageinfo;
+import com.example.jst.bean.dto.RestDate;
+import com.example.jst.dao.MesAbnormalTimeDao;
+import com.example.jst.dao.MesBatchRestDao;
+import com.example.jst.dao.MesWorkTimeRecordDao;
+import com.example.jst.dao.ReportWorkTimeDao;
+import com.example.jst.util.DateUtil;
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -34,6 +38,17 @@ public class MesWorkTimeRecordService {
     @Autowired
     private ReportWorkTimeDao reportWorkTimeDao;
 
+    public PageInfo<MesWorkTimeRecord> data() {
+        PageHelper.startPage(0, 10);
+        Page<MesWorkTimeRecord> page=(Page<MesWorkTimeRecord>)workTimeRecordDao.workTimeRecordList();
+        PageInfo<MesWorkTimeRecord> pageInfo = new PageInfo<>();
+        pageInfo.setTotal(page.getTotal());
+        pageInfo.setSize(page.getPageSize());
+        pageInfo.setPages(page.getPages());
+        pageInfo.setList(page);
+        return pageInfo;
+    }
+
     public void list() {
         List<MesWorkTimeRecord> mesWorkTimeRecords = workTimeRecordDao.workTimeRecordList();
         System.out.println("工单号:" +
@@ -55,7 +70,7 @@ public class MesWorkTimeRecordService {
                     - abnormalHour - effectiveRestTime;
 
             ReportWorktime reportWorktime = new ReportWorktime();
-            reportWorktime.setCreateTime(DateUtil.structDate("2019-04-20 08:00:00", "00:00:00"));
+            reportWorktime.setCreateTime(DateUtil.structDate("2019-04-19", "00:00:00"));
             reportWorktime.setAbnormal_hour(abnormalHour);
             reportWorktime.setWork_effective_hour(effectiveWorkTime);
             reportWorktime.setRest_effctive_hour(effectiveRestTime);
